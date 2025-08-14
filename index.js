@@ -33,7 +33,7 @@ function operation() {
       } else if(action === "Consultar Saldo") {
 
       } else if(action === "Depositar") {
-
+        deposit();
       } else if(action === "Sacar") {
 
       } else if(action === "Sair") {
@@ -84,3 +84,19 @@ function buildAccount() {
     })
     .catch((err) => console.log(err));
 }
+
+// add an amount to user account
+function deposit() {
+  inquirer.prompt([
+    {
+      name: 'accountName',
+      message: 'Qual o nome da sua conta'
+    }
+  ])
+  .then((answer) => {
+    const accountName = answer["accountName"];
+  })
+  .catch((err) => console.log(err))
+}
+
+// verify if account exists
