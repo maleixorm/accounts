@@ -97,6 +97,18 @@ function deposit() {
       if (!checkAccount(accountName)) {
         return deposit();
       }
+
+      inquirer
+        .prompt([
+          {
+            name: "amount",
+            message: "Qual valor você deseja depositar?",
+          },
+        ])
+        .then((answer) => {
+          const amount = answer["amount"];
+        })
+        .catch((err) => console.log(err));
     })
     .catch((err) => console.log(err));
 }
@@ -108,4 +120,14 @@ function checkAccount(accountName) {
     return false;
   }
   return true;
+}
+
+function addAmount(accountName, amount) {}
+
+function getAccount(accountName) {
+  const accountJSON = fs.readFileSync(`accounts/${accountName}.json`, {
+    encoding: "utf8",
+    flag: "r",
+  });
+  return JSON.parse(accountJSON);
 }
