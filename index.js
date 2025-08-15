@@ -6,8 +6,7 @@ const chalk = require("chalk");
 const fs = require("fs");
 const { type } = require("os");
 
-console.log("Iniciamos o Accounts");
-
+console.log(chalk.bgBlue.black("Accounts - Seu Banco Digital"));
 operation();
 
 function operation() {
@@ -31,6 +30,7 @@ function operation() {
       if (action === "Criar Conta") {
         createAccount();
       } else if (action === "Consultar Saldo") {
+        getAccountBalance();
       } else if (action === "Depositar") {
         deposit();
       } else if (action === "Sacar") {
@@ -72,7 +72,7 @@ function buildAccount() {
       }
       fs.writeFileSync(
         `accounts/${accountName}.json`,
-        '{ "balance": 0 }',
+        '{"balance": 0}',
         function (err) {
           console.log(err);
         }
@@ -151,4 +151,26 @@ function getAccount(accountName) {
     flag: "r",
   });
   return JSON.parse(accountJSON);
+}
+
+// show account balance
+function getAccountBalance() {
+  inquirer.prompt([
+    {
+      name: 'accountName',
+      message: 'Qual o nome da sua conta?'
+    }
+  ])
+  .then((answer) => {
+    const accountName = answer['accountName'];
+    // verify if account exists
+    if (!checkAccount(accountName)) {
+      return getAccountBalance();
+    }
+
+    const accountData = getAccount(accountName);
+    console.log(chalk.bgBlue.black(`Olá! O saldo da sua conta é de RS ${accountData.balance}`));
+    operation();
+  })
+  .catch((err) => console.log(err));
 }
