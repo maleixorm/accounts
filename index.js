@@ -143,7 +143,6 @@ function addAmount(accountName, amount) {
   console.log(
     chalk.green(`Foi depositado o valor de R$ ${amount} na sua conta.`)
   );
-  operation();
 }
 
 function getAccount(accountName) {
