@@ -34,6 +34,7 @@ function operation() {
       } else if (action === "Depositar") {
         deposit();
       } else if (action === "Sacar") {
+        withdraw();
       } else if (action === "Sair") {
         console.log(chalk.bgBlue.black("Obrigado por utilizar o Accounts!"));
         process.exit();
@@ -155,22 +156,60 @@ function getAccount(accountName) {
 
 // show account balance
 function getAccountBalance() {
-  inquirer.prompt([
-    {
-      name: 'accountName',
-      message: 'Qual o nome da sua conta?'
-    }
-  ])
-  .then((answer) => {
-    const accountName = answer['accountName'];
-    // verify if account exists
-    if (!checkAccount(accountName)) {
-      return getAccountBalance();
-    }
+  inquirer
+    .prompt([
+      {
+        name: "accountName",
+        message: "Qual o nome da sua conta?",
+      },
+    ])
+    .then((answer) => {
+      const accountName = answer["accountName"];
+      // verify if account exists
+      if (!checkAccount(accountName)) {
+        return getAccountBalance();
+      }
 
-    const accountData = getAccount(accountName);
-    console.log(chalk.bgBlue.black(`Olá! O saldo da sua conta é de RS ${accountData.balance}`));
-    operation();
-  })
-  .catch((err) => console.log(err));
+      const accountData = getAccount(accountName);
+      console.log(
+        chalk.bgBlue.black(
+          `Olá! O saldo da sua conta é de RS ${accountData.balance}`
+        )
+      );
+      operation();
+    })
+    .catch((err) => console.log(err));
+}
+
+// withdraw an amount from user account
+function withdraw() {
+  inquirer
+    .prompt([
+      {
+        name: "accountName",
+        message: "Qual o nome da sua conta?",
+      },
+    ])
+    .then((answer) => {
+      const accountName = answer["accountName"];
+
+      if (!checkAccount(accountName)) {
+        return withdraw();
+      }
+
+      inquirer
+        .prompt([
+          {
+            name: "amount",
+            message: "Qual o valor do saque?",
+          },
+        ])
+        .then((answer) => {
+          const amount = answer["amount"];
+          console.log(amount);
+          operation();
+        })
+        .catch((err) => console.log(err));
+    })
+    .catch((err) => console.log(err));
 }
