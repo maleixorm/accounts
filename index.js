@@ -207,7 +207,6 @@ function withdraw() {
         .then((answer) => {
           const amount = answer["amount"];
           removeAmount(accountName, amount);
-          operation();
         })
         .catch((err) => console.log(err));
     })
@@ -216,14 +215,33 @@ function withdraw() {
 
 function removeAmount(accountName, amount) {
   const accountData = getAccount(accountName);
-  
+
   if (!amount) {
-    console.log(chalk.bgRed.black("Ocorreu um erro! Tente novamente mais tarde!"));
+    console.log(
+      chalk.bgRed.black("Ocorreu um erro! Tente novamente mais tarde.")
+    );
     return withdraw();
   }
-  
+
   if (accountData.balance < amount) {
-    console.log(chalk.bgRed.black("Valor indisponível! Você não tem saldo para realizar este saque!"));
+    console.log(
+      chalk.bgRed.black(
+        "Valor indisponível! Você não tem saldo para realizar este saque."
+      )
+    );
     return withdraw();
   }
+
+  accountData.balance = parseFloat(accountData.balance) - parseFloat(amount);
+  fs.writeFileSync(
+    `accounts/${accountName}.json`,
+    JSON.stringify(accountData),
+    function (err) {
+      console.log(err);
+    }
+  );
+  console.log(
+    chalk.green(`Foi realizado o saque de R$ ${amount} na sua conta!`)
+  );
+  operation();
 }
